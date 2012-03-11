@@ -32,7 +32,13 @@ global_scope =
   seek: (varb) ->
     if @[varb]? then @ else throw new Error 'nowhere'
   '+': (arr) ->
-    arr.reduce (x, s) -> s += x
+    arr.reduce (s, x) -> s += x
+  '-': (arr) ->
+    arr.reduce (m, x) -> m -= x
+  '*': (arr) ->
+    arr.reduce (p, x) -> p *= x
+  '/': (arr) ->
+    arr.reduce (d, x) -> d /= x
 
 eval = (arr, env=global_scope) ->
   head = do arr.shift
@@ -53,4 +59,4 @@ eval = (arr, env=global_scope) ->
     eval arr, inside
 
 o eval ['+', 1, ['+', ['+', 1, 3], ['+', ['+', 3, 4], 4]]]
-o eval (parse (make_arr '(+ 2 (+ 3 (+ 3 44)))'))
+o eval (parse (make_arr '(+ 2 (+ 3 (/ 3 4 2 2)))'))
