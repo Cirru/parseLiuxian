@@ -27,15 +27,15 @@ make_arr = (str) ->
 
 scope = (env) ->
   obj =
-    seek: (varb) =>
-      if @[varb]? then @ else env.seek varb
+    seek: (varb, envi) =>
+      if envi[varb]? then envi else env.seek varb, env
 global_scope =
-  seek: (varb) ->
-    if @[varb]? then @ else undefined
+  seek: (varb, envi) =>
+    o 'refresh: ', @, envi, varb
+    if envi[varb]? then envi else undefined
   '+': (arr) ->
     arr.reduce (s, x) -> s += x
   '>': (arr) ->
-    o 'in >: ', arr
     for x, i in arr[1..]
       if x>=arr[i] then return false
     return true
@@ -44,46 +44,62 @@ isArray = (arr) ->
   'splice' in arr end 'join' in arr
 
 eval = (arr, env=global_scope) ->
-  o env, arr
-  return arr if typeof arr in ['string', 'number']
+  o 'begin: ', arr, env
+  return arr if typeof arr is'number'
+  if typeof arr is 'string'
+    seek = env.seek arr, env
+    o arr, env, seek, env.seek
+    if seek? then return seek[arr]
+    else err 'not found string of var'
   head = do arr.shift
   unless typeof head is 'string' then err 'Must String Head!'
   else
     if head is '@'
       unless typeof arr is 'object' then err ' Not Array!'
       if typeof arr[0] is 'string'
-        seek = env.seek arr[0]
+        seek = env.seek arr[0], env
         arr[1] = eval arr[1], env
-        o 'arr[1]: ', arr[1]
         if seek? then seek[arr[0]] = arr[1]
         else env[arr[0]] = eval arr[1], env
-        o 'env[arr[0]]', env[arr[0]]
         return env[arr[0]]
       else
+        o 'funcing', env
+        seek = env.seek arr[0][0], env
+        o 'still: ',arr
+        func_scope = scope env
+        func = (args) ->
+          o 'in func', func_scope, arr, args
+          for val, index in arr[0][1..]
+            func_scope[val] = args[index]
+          eval arr[1], func_scope
+        if seek? then seek[arr[0][0]] = func
+        else env[arr[0][0]] = func
+        func
     else if head is '!'
+      o 'at (!): ', arr
       arr.forEach (x) -> eval x, env
-      o env
       return 'done (!)'
     else if head is 'o'
-      o 'check arr: ', arr[0]
-      arr.forEach (x) -> o env[x]
+      arr = arr.map (x) -> eval x, env
       o arr.join ', '
       return 'done::o'
     else if head is 'if'
-      o 'check in if: ', arr
       arr[0] = eval arr[0], env
       if arr[0] is true then eval arr[1], env
       else eval arr[2], env
       return 'done if...'
     else
-      seek = env.seek head
-      o 'seek is: ', seek
+      o 'end: ', arr, env, head
+      seek = env.seek head, env
+      o 'so, here? '
       arr = arr.map (x) -> eval x, env
-      o 'after seeking: ', arr
       if seek? then return seek[head] arr
       else err 'found no function'
   'default return...'
 
 o '\n\n:::::::::::'
 # o eval ['!', ['@', 'add', ['+', 1, ['@', 'add2', 4]]], ['o', 'add'], ['o', 'add2']]
-o eval ['if', ['>', ['+', 1, 2], 1], ['o', 'true'], ['o', 'false']]
+# o eval ['if', ['>', ['+', 1, 2], 1], ['o', 'true'], ['o', 'false']]
+# o eval ['!', ['@', 'b', 2], ['o', ['+', 1, 'b']]]
+o eval ['!', ['@', ['a', 'b'], ['+', 1, 'b']], ['o', ['a', 2]]]
+# o eval ['o', ['+', 1, 2]]
