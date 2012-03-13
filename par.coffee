@@ -4,17 +4,17 @@ o = console.log
 input_string = '(rever (list 1 3 4 4))'
 
 parse = (arr) ->
-  reverse = ->
+  recurse = ->
     head = do arr.shift
     if head is '('
       in_brackets = []
-      in_brackets.push do reverse until arr[0] is ')'
+      in_brackets.push do recurse until arr[0] is ')'
       do arr.shift
       in_brackets
     else
       x = Number head
       if x>0 or x<1 then x else head
-  do reverse
+  do recurse
 
 make_arr = (str) ->
   str.replace(/([\(\)])/g, ' $1 ')
