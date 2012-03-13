@@ -35,6 +35,7 @@ global_scope =
   '+': (arr) ->
     arr.reduce (s, x) -> s += x
   '>': (arr) ->
+    o 'in >: ', arr
     for x, i in arr[1..]
       if x>=arr[i] then return false
     return true
@@ -64,12 +65,13 @@ eval = (arr, env=global_scope) ->
       o env
       return 'done (!)'
     else if head is 'o'
-      o 'check arr: ', arr
+      o 'check arr: ', arr[0]
       arr.forEach (x) -> o env[x]
       o arr.join ', '
       return 'done::o'
     else if head is 'if'
       o 'check in if: ', arr
+      arr[0] = eval arr[0], env
       if arr[0] is true then eval arr[1], env
       else eval arr[2], env
       return 'done if...'
@@ -79,8 +81,9 @@ eval = (arr, env=global_scope) ->
       arr = arr.map (x) -> eval x, env
       o 'after seeking: ', arr
       if seek? then return seek[head] arr
+      else err 'found no function'
   'default return...'
 
 o '\n\n:::::::::::'
 # o eval ['!', ['@', 'add', ['+', 1, ['@', 'add2', 4]]], ['o', 'add'], ['o', 'add2']]
-o eval ['if', ['>', 0, 1], ['o', 'true'], ['o', 'false']]
+o eval ['if', ['>', ['+', 1, 2], 1], ['o', 'true'], ['o', 'false']]
