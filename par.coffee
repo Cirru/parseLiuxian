@@ -34,6 +34,10 @@ global_scope =
     if @[varb]? then @ else undefined
   '+': (arr) ->
     arr.reduce (s, x) -> s += x
+  '>': (arr) ->
+    for x, i in arr[1..]
+      if x>=arr[i] then return false
+    return true
 
 isArray = (arr) ->
   'splice' in arr end 'join' in arr
@@ -57,17 +61,26 @@ eval = (arr, env=global_scope) ->
       else
     else if head is '!'
       arr.forEach (x) -> eval x, env
+      o env
       return 'done (!)'
     else if head is 'o'
       o 'check arr: ', arr
       arr.forEach (x) -> o env[x]
+      o arr.join ', '
       return 'done::o'
+    else if head is 'if'
+      o 'check in if: ', arr
+      if arr[0] is true then eval arr[1], env
+      else eval arr[2], env
+      return 'done if...'
     else
       seek = env.seek head
       o 'seek is: ', seek
       arr = arr.map (x) -> eval x, env
+      o 'after seeking: ', arr
       if seek? then return seek[head] arr
   'default return...'
 
 o '\n\n:::::::::::'
-o eval ['!', ['@', 'add', ['+', 1, ['@', 'add2', 4]]], ['o', 'add'], ['o', 'add2']]
+# o eval ['!', ['@', 'add', ['+', 1, ['@', 'add2', 4]]], ['o', 'add'], ['o', 'add2']]
+o eval ['if', ['>', 0, 1], ['o', 'true'], ['o', 'false']]
