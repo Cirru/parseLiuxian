@@ -55,7 +55,12 @@ eval = (arr, env=global_scope) ->
       if typeof arr[0] is 'string'
         env[arr[0]] = eval arr[1], env
         o 'env after: ', env
-    'else...'
+    else if head is '!'
+      arr.forEach (x) -> eval x, env
+    else if head is 'o'
+      o 'check arr: ', arr
+      arr.forEach (x) -> o env[x]
+  'default return...'
 
 o '\n\n\n\n:::::::::::'
-o eval ['@', 'add', 3]
+o eval ['!', ['@', 'add', 3], ['o', 'add']]
