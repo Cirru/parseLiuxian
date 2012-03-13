@@ -1,5 +1,6 @@
 
 o = console.log
+err = (str) -> throw new Error str
 
 input_string = '(rever (list 1 3 4 4))'
 
@@ -47,9 +48,14 @@ eval = (arr, env=global_scope) ->
   o env
   return arr if typeof arr in ['string', 'number']
   head = do arr.shift
-  unless typeof head is 'string' then 'Why String!?'
+  unless typeof head is 'string' then err 'Must String Head!'
   else
-    o head
+    if head is '@'
+      unless typeof arr is 'object' then err ' Not Array!'
+      if typeof arr[0] is 'string'
+        env[arr[0]] = eval arr[1], env
+        o 'env after: ', env
     'else...'
 
-o eval ['+', 1, 2]
+o '\n\n\n\n:::::::::::'
+o eval ['@', 'add', 3]
