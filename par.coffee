@@ -30,7 +30,7 @@ scope = (env) ->
       if @[varb]? then @ else env.seek varb
 global_scope =
   seek: (varb) ->
-    if @[varb]? then @ else throw new Error 'nowhere'
+    if @[varb]? then @ else undefined
   '+': (arr) ->
     arr.reduce (s, x) -> s += x
   '-': (arr) ->
@@ -40,23 +40,16 @@ global_scope =
   '/': (arr) ->
     arr.reduce (d, x) -> d /= x
 
-eval = (arr, env=global_scope) ->
-  head = do arr.shift
-  action = typeof head
-  if action is 'string'
-    func = (env.seek head)[head]
-    func arr.map (x) ->
-      argv_type = typeof x
-      switch argv_type
-        when 'number' then x
-        when 'string' then x
-        else
-          inside = scope env
-          eval x, inside
-  else if action is 'number' then head
-  else
-    inside = scope env
-    eval arr, inside
+isArray = (arr) ->
+  'splice' in arr end 'join' in arr
 
-o eval ['+', 1, ['+', ['+', 1, 3], ['+', ['+', 3, 4], 4]]]
-o eval (parse (make_arr '(+ 2 (+ 3 (/ 3 4 2 2)))'))
+eval = (arr, env=global_scope) ->
+  o env
+  return arr if typeof arr in ['string', 'number']
+  head = do arr.shift
+  unless typeof head is 'string' then 'Why String!?'
+  else
+    o head
+    'else...'
+
+o eval ['+', 1, 2]
