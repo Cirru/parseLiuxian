@@ -31,7 +31,7 @@ scope = (env) ->
       if envi[varb]? then envi else env.seek varb, env
 global_scope =
   seek: (varb, envi) =>
-    o 'refresh: ', @, envi, varb
+    # o 'refresh: ', @, envi, varb
     if envi[varb]? then envi else undefined
   '+': (arr) ->
     arr.reduce (s, x) -> s += x
@@ -44,31 +44,34 @@ isArray = (arr) ->
   'splice' in arr end 'join' in arr
 
 eval = (arr, env=global_scope) ->
-  o 'begin: ', arr, env
+  # o 'begin: ', arr, env
   return arr if typeof arr is'number'
   if typeof arr is 'string'
     seek = env.seek arr, env
-    o arr, env, seek, env.seek
+   # o arr, env, seek, env.seek
     if seek? then return seek[arr]
     else err 'not found string of var'
+  # return arr if typeof arr.join is 'function'
   head = do arr.shift
+  o 'head: ', head, arr
   unless typeof head is 'string' then err 'Must String Head!'
   else
     if head is '@'
       unless typeof arr is 'object' then err ' Not Array!'
       if typeof arr[0] is 'string'
         seek = env.seek arr[0], env
+        o 'arr[1]: ', arr[1]
         arr[1] = eval arr[1], env
         if seek? then seek[arr[0]] = arr[1]
-        else env[arr[0]] = eval arr[1], env
+        else env[arr[0]] = arr[1]
         return env[arr[0]]
       else
-        o 'funcing', env
+        # o 'funcing', env
         seek = env.seek arr[0][0], env
-        o 'still: ',arr
+        # o 'still: ',arr
         func_scope = scope env
         func = (args) ->
-          o 'in func', func_scope, arr, args
+          # o 'in func', func_scope, arr, args
           for val, index in arr[0][1..]
             func_scope[val] = args[index]
           eval arr[1], func_scope
@@ -81,6 +84,7 @@ eval = (arr, env=global_scope) ->
       return 'done (!)'
     else if head is 'o'
       arr = arr.map (x) -> eval x, env
+      o 'o: ', arr[0]
       o arr.join ', '
       return 'done::o'
     else if head is 'if'
@@ -88,8 +92,10 @@ eval = (arr, env=global_scope) ->
       if arr[0] is true then eval arr[1], env
       else eval arr[2], env
       return 'done if...'
+    else if head is '#'
+      return arr.map (x) -> eval x, env
     else
-      o 'end: ', arr, env, head
+      #  'end: ', arr, env, head
       seek = env.seek head, env
       o 'so, here? '
       arr = arr.map (x) -> eval x, env
@@ -101,5 +107,7 @@ o '\n\n:::::::::::'
 # o eval ['!', ['@', 'add', ['+', 1, ['@', 'add2', 4]]], ['o', 'add'], ['o', 'add2']]
 # o eval ['if', ['>', ['+', 1, 2], 1], ['o', 'true'], ['o', 'false']]
 # o eval ['!', ['@', 'b', 2], ['o', ['+', 1, 'b']]]
-o eval ['!', ['@', ['a', 'b'], ['+', 1, 'b']], ['o', ['a', 2]]]
+# o eval ['!', ['@', ['a', 'b'], ['+', 1, 'b']], ['o', ['a', 2]]]
 # o eval ['o', ['+', 1, 2]]
+# o eval ['!', ['@', 'a', 3], ['@', ['b', 'a'], ['+', 'a', 'a']], ['o', ['b', 4]]]
+o eval ['!', ['@', 'a', ['#', 1, 2, 3]], ['o', 'a']]
