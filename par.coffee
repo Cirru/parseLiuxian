@@ -2,7 +2,7 @@
 o = console.log
 err = (str) -> throw new Error str
 
-input_string = '(rever (list 1 3 4 4))'
+input_string = '(rever (list 1 3 false 4))'
 
 parse = (arr) ->
   recurse = ->
@@ -13,6 +13,8 @@ parse = (arr) ->
       do arr.shift
       in_brackets
     else
+      return true if head is 'true'
+      return false if head is 'false'
       x = Number head
       if x>0 or x<1 then x else head
   do recurse
@@ -23,7 +25,7 @@ make_arr = (str) ->
      .filter (item) ->
        if item is '' then false else true
 
-# o parse make_arr input_string
+o parse make_arr input_string
 
 scope = (env) ->
   obj =
@@ -45,7 +47,7 @@ isArray = (arr) ->
 
 eval = (arr, env=global_scope) ->
   # o 'begin: ', arr, env
-  return arr if typeof arr is'number'
+  return arr if typeof arr in ['number', 'boolean']
   if typeof arr is 'string'
     seek = env.seek arr, env
    # o arr, env, seek, env.seek
@@ -110,4 +112,5 @@ o '\n\n:::::::::::'
 # o eval ['!', ['@', ['a', 'b'], ['+', 1, 'b']], ['o', ['a', 2]]]
 # o eval ['o', ['+', 1, 2]]
 # o eval ['!', ['@', 'a', 3], ['@', ['b', 'a'], ['+', 'a', 'a']], ['o', ['b', 4]]]
-o eval ['!', ['@', 'a', ['#', 1, 2, 3]], ['o', 'a']]
+o eval ['if', ['>', 4, 3], ['o', true], ['o', false]]
+# o eval ['!', ['@', 'a', ['#', 1, 2, 3]], ['o', 'a']]
