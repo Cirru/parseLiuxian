@@ -9,9 +9,8 @@ mask_blank = (str) ->
   now_quote = null
   for item, index in str
     if item is ' '
-      if in_quote
+      unless in_quote
         str = str[...index] + mask + str[index+1..]
-        ll 'xx', str
     else if item is '\''
       if now_quote in ['\'', null]
         if str[index-1]?
@@ -48,8 +47,8 @@ parse = (arr) ->
     else head
 
 make_arr = (str) ->
-  str.replace(/([\(\)])/g, ' $1 ')
-      .split(' ')
+  str.replace(/([\(\)])/g, "#{mask}$1#{mask}")
+      .split(mask)
       .filter (item) ->
         if item is '' then false else true
 
