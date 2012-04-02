@@ -3,6 +3,8 @@ ll = console.log
 err = (str) -> throw new Error str
 
 mask = '\u0000'
+mask_left = '\u0001'
+mask_right = '\u0002'
 
 mask_blank = (str) ->
   in_quote = no
@@ -31,10 +33,25 @@ mask_blank = (str) ->
             else
               in_quote = on
               now_quote = '"'
-  str
+    else if item is '('
+      if in_quote
+        str = str[...index] + mask_left + str[index+1..]
+    else if item is ')'
+      if in_quote
+        str = str[...index] + mask_right + str[index+1..]
+
+  count_left = 0
+  count_right = 0
+  for item in str
+    count_left += 1 if item is '('
+    count_right += 1 if item is ')'
+  if count_right is count_left
+    return str
+  else
+    throw new Error "pathesis not match"
 
 
-input_string = '(rever (list 1 \'d \' \'  d\' 3 false 4))'
+input_string = '(rever (list inde"("x-)1 3 false 4)'
 
 parse = (arr) ->
   do recurse = ->
