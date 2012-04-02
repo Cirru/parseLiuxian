@@ -115,6 +115,20 @@ make_arr = (str) ->
 
 source_array = parse make_arr (mask_blank input_string)
 
-ll source_array[1]
 sequential_excution = (arr) ->
-  return 0
+  effort = ''
+  for line in arr
+    effort += (try_eval line)
+  effort
+
+try_eval = (arr) ->
+  throw new Error 'empty exp..' if arr.length is 0
+  if arr[0] is 'print' then return print_func arr[1..]
+  else ll 'nothing yet'
+
+print_func = (arr) ->
+  args = arr.join ', '
+  "console.log(#{args});"
+
+target = sequential_excution source_array
+ll target
