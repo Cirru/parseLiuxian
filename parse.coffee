@@ -5,21 +5,37 @@ err = (str) -> throw new Error str
 mask = '\u0000'
 
 mask_blank = (str) ->
-  # use single quotion marks to handle
   in_quote = no
+  now_quote = null
   for item, index in str
     if item is ' '
       if in_quote
         str = str[...index] + mask + str[index+1..]
         ll 'xx', str
     else if item is '\''
-      if str[index-1]?
-        if str[index-1] isnt '\\'
-          in_quote = if in_quote then off else on
+      if now_quote in ['\'', null]
+        if str[index-1]?
+          if str[index-1] isnt '\\'
+            if in_quote
+              in_quote = off
+              now_quote = null
+            else
+              in_quote = on
+              now_quote = '\''
+    else if item is '"'
+      if now_quote in ['"', null]
+        if str[index-1]?
+          if str[index-1] isnt '\\'
+            if in_quote
+              in_quote = off
+              now_quote = null
+            else
+              in_quote = on
+              now_quote = '"'
   str
 
 
-input_string = '(rever (list 1 \'d d\' 3 false 4))'
+input_string = '(rever (list 1 \'d \' \'  d\' 3 false 4))'
 
 parse = (arr) ->
   do recurse = ->
