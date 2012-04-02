@@ -1,8 +1,25 @@
 
-o = console.log
+ll = console.log
 err = (str) -> throw new Error str
 
-input_string = '(rever (list 1 3 false 4))'
+mask = '\u0000'
+
+mask_blank = (str) ->
+  # use single quotion marks to handle
+  in_quote = no
+  for item, index in str
+    if item is ' '
+      if in_quote
+        str = str[...index] + mask + str[index+1..]
+        ll 'xx', str
+    else if item is '\''
+      if str[index-1]?
+        if str[index-1] isnt '\\'
+          in_quote = if in_quote then off else on
+  str
+
+
+input_string = '(rever (list 1 \'d d\' 3 false 4))'
 
 parse = (arr) ->
   do recurse = ->
@@ -16,8 +33,8 @@ parse = (arr) ->
 
 make_arr = (str) ->
   str.replace(/([\(\)])/g, ' $1 ')
-     .split(' ')
-     .filter (item) ->
-       if item is '' then false else true
+      .split(' ')
+      .filter (item) ->
+        if item is '' then false else true
 
-o parse make_arr input_string
+ll parse make_arr (mask_blank input_string)
