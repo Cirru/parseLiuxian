@@ -2,6 +2,6 @@
 comments without indentation...
 write code with 2 spaces in front!
 
-  console/log "2"
-  for i (list 2 3)
-    print "fff)"
+  console/log "2\\"
+  for i \ (list 2 3)
+      print "fff)"

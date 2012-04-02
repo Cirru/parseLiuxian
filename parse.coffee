@@ -5,6 +5,7 @@ err = (str) -> throw new Error str
 mask = '\u0000'
 mask_left = '\u0001'
 mask_right = '\u0002'
+mask_3 = '\u0003'
 
 mask_blank = (str) ->
   in_quote = no
@@ -39,6 +40,9 @@ mask_blank = (str) ->
     else if item is ')'
       if in_quote
         str = str[...index] + mask_right + str[index+1..]
+    else if item is '\\'
+      if in_quote
+        str = str[...index] + mask_3 + str[index+1..]
 
   count_left = 0
   count_right = 0
@@ -55,7 +59,6 @@ input_data = fs.readFileSync 'code.lx', 'utf-8'
 
 input_array = []
 for line in input_data.split '\n'
-  line.replace /\s|\s/g, ' ( '
   image = line.match /^\s{2,}/
   if image?
     input_array.push line[2..]
@@ -75,13 +78,13 @@ get_indents = (item) ->
   image = item.match /^(\s*)/
   image[1].length
 for line, index in src_arr
+  line = line.replace /\s\\\s/g, ' ( '
   src_arr[index] = '(' + line
   curr_indent = get_indents line
   next_indent = 0
   if src_arr[index+1]?
     next_indent = get_indents src_arr[index+1]
   dn = (curr_indent - next_indent) / 2
-  ll dn
   if dn isnt (Math.round dn)
     throw new Error 'bad indentation'
   while dn >= 0
@@ -102,6 +105,7 @@ parse = (arr) ->
     else
       return head.replace(/\u0001/g, '(')
         .replace(/\u0002/g, ')')
+        .replace(/\u0003/g, '\\')
 
 make_arr = (str) ->
   str.replace(/([\(\)])/g, "#{mask}$1#{mask}")
@@ -109,4 +113,8 @@ make_arr = (str) ->
       .filter (item) ->
         if item is '' then false else true
 
-ll parse make_arr (mask_blank input_string)
+source_array = parse make_arr (mask_blank input_string)
+
+ll source_array[1]
+sequential_excution = (arr) ->
+  return 0
