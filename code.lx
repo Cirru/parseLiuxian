@@ -22,7 +22,7 @@ write code with 2 spaces in front!
   while (> a 3) (console/log 3)
     let a (- a 1)
 
-  for (arr 1 2 3) a (console/log a)
+  for (arr 1 2 444) a (console/log a)
 
 then, detailed varable names needed, the ideas below will be mixed:
 1)  'object/attribute' converts to 'object.attribute'

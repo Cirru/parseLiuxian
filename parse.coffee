@@ -236,20 +236,19 @@ for_loop = (arr) ->
   range = exp_judge arr[0]
   varas = arr[1]
   if typeof varas is 'object'
-    varable = varas[0]
-    index = varas[1]
+    value = varas[0]
+    key = varas[1]
   else
-    varable = varas
-    index = undefined
+    value = varas
+    key = undefined
   body = sequence arr[2..]
-  exp = "for(var _i=0;_i<#{range}.length;_i++){"
-  exp += "#{varable} = #{range}[_i];"
-  if index?
-    exp += "#{index} = _i;"
+  exp = "for(var _i in #{range}){"
+  exp += "#{value} = #{range}[_i];"
+  if key?
+    exp += "#{key} = _i;"
   else
     exp += 'delete _i;'
-  exp += "#{body}}"
-  exp
+  exp + "#{body}}"
 
 va_list =
   '!': '1'
@@ -295,6 +294,6 @@ run_method = (head, body) ->
   "#{obj}.#{head[1..]}(#{args})"
 
 target = sequence source_array
-###
+
 beautify = (require './beautify').js_beautify
 fs.writeFile 'target.js', (beautify target), 'utf-8'

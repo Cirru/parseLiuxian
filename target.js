@@ -24,8 +24,8 @@ while (a > 3) {
     console.log(3);
     a = a - 1;
 };
-for (var _i = 0; _i < [1, 2, 3].length; _i++) {
-    a = [1, 2, 3][_i];
+for (var _i in [1, 2, 444]) {
+    a = [1, 2, 444][_i];
     delete _i;
     console.log(a);
 };
