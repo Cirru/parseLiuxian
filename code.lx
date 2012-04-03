@@ -21,3 +21,5 @@ write code with 2 spaces in front!
   let a 5
   while (> a 3) (console/log 3)
     let a (- a 1)
+
+  for (arr 1 2 3) a (console/log a)

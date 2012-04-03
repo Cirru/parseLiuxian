@@ -146,6 +146,7 @@ expend = (arr) ->
     when 'arr'   then exp = make_array      body
     when 'var'   then exp = declare_varable body
     when 'let'   then exp = assign_varable  body
+    when 'for'   then exp = for_loop        body
     when 'fn'    then exp = define_function body
     when 'if'    then exp = if_expression   body
     when 'while' then exp = while_loop      body
@@ -228,6 +229,21 @@ while_loop = (arr) ->
   cond = expend arr[0]
   body = sequence arr[1..]
   "while(#{cond}){#{body}}"
+
+for_loop = (arr) ->
+  range = exp_judge arr[0]
+  varas = arr[1]
+  if typeof varas is 'object'
+    varable = varas[0]
+    index = varas[1]
+  else
+    varable = varas
+  body = sequence arr[2..]
+  exp = "for(_i=0;_i<#{range}.length;_i++){"
+  exp += "#{varable} = #{range}[_i];"
+  exp += "#{index} = _i;" if index?
+  exp += "#{body};}"
+  exp
 
 target = sequence source_array
 
