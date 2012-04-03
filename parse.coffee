@@ -155,6 +155,8 @@ expend = (arr) ->
         exp =  calculate head, body
       if (image = head.match /^((\w+\/)*\w+)$/)?
         exp = run_function head, body
+      if (image = head.match /^\/.+/)
+        exp = run_method head, body
   exp
 
 exp_judge = (x) ->
@@ -248,6 +250,12 @@ for_loop = (arr) ->
     exp += 'delete _i;'
   exp += "#{body}}"
   exp
+
+run_method = (head, body) ->
+  unless body[0]? then throw new Error 'err in method'
+  obj = body[0]
+  args = (body[1..].map exp_judge).join ', '
+  "#{obj}.#{head[1..]}(#{args})"
 
 target = sequence source_array
 

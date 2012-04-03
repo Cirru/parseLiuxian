@@ -29,12 +29,4 @@ for (var _i = 0; _i < [1, 2, 3].length; _i++) {
     delete _i;
     console.log(a);
 };
-console.log('fabonaci test');
-var f = function n(a) {
-        if (a < 2) {
-            return (1);
-        } else {
-            return (f(a - 1) + f(a - 2));
-        };
-    };
-console.log(f(10));
+obj.call(3, [2]);
