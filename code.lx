@@ -26,9 +26,7 @@ write code with 2 spaces in front!
 
 then, detailed varable names needed, the ideas below will be mixed:
 1)  'object/attribute' converts to 'object.attribute'
-2)  'array:number' converts to 'array[number]'
-3)  'object#\'attribute\'' converts to 'object[\'attribute\']'
+2)  pounctions like '!' in name change with '_', 'a!' to 'a_1'
 4)  '(/method object args)' converts to 'object.method(args)'
-5)  pounctions like '!' in name change with '$', 'a!' to 'a$1'
   
   /call obj 3 (arr 2)

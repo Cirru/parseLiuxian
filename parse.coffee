@@ -251,6 +251,45 @@ for_loop = (arr) ->
   exp += "#{body}}"
   exp
 
+va_list =
+  '!': '1'
+  '?': '2'
+  '@': '3'
+  '#': '4'
+  '_': '5'
+  '%': '6'
+  '^': '7'
+  '&': '8'
+  '*': '9'
+  '-': '0'
+  '=': 'a'
+  '+': 'b'
+  ':': 'c'
+va_map = (str) ->
+  new_str = ''
+  for item in str
+    if va_list[item]?
+      new_str += '_' + va_list[item]
+    else
+      new_str += item
+  new_str
+va = (str) ->
+  available = /^([\w\!\?@#\$\%\^\&\*\-\=\+:]+)(.*)/
+  image = str.match available
+  exp = va_map image[1]
+  left = image[2]
+  while left.length > 0
+    if left[0] is '/'
+      image = left[1..].match available
+      sub_exp = va_map image[1]
+      left = image[2]
+      exp += "['#{sub_exp}']"
+      continue
+    throw new Error "varable cant be recognized"
+  exp
+ll va 'console/fun:4'
+ll va 'console/fun_c4'
+
 run_method = (head, body) ->
   unless body[0]? then throw new Error 'err in method'
   obj = body[0]
@@ -258,6 +297,6 @@ run_method = (head, body) ->
   "#{obj}.#{head[1..]}(#{args})"
 
 target = sequence source_array
-
+###
 beautify = (require './beautify').js_beautify
 fs.writeFile 'target.js', (beautify target), 'utf-8'
