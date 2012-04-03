@@ -170,4 +170,4 @@ assign_varable = (arr) ->
 target = sequential_excution source_array
 
 beautify = (require './beautify').js_beautify
-ll beautify target
+fs.writeFile 'target.js', (beautify target), 'utf-8'
