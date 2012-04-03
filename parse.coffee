@@ -52,7 +52,7 @@ mask_blank = (str) ->
   if count_right is count_left
     return str
   else
-    throw new Error "pathesis not match"
+    throw new Error "pathesis not match, defa"
 
 fs = require 'fs'
 input_data = fs.readFileSync 'code.lx', 'utf-8'
@@ -77,14 +77,28 @@ src_arr = fold_input_array
 get_indents = (item) ->
   image = item.match /^(\s*)/
   image[1].length
+
 for line, index in src_arr
   line = line.replace /\s\\\s/g, ' ( '
+
   src_arr[index] = '(' + line
   curr_indent = get_indents line
   next_indent = 0
   if src_arr[index+1]?
     next_indent = get_indents src_arr[index+1]
   dn = (curr_indent - next_indent) / 2
+  
+  if dn >= 0
+    count_left = 0
+    count_right = 0
+    for item in line
+      if item is '(' then count_left += 1
+      if item is ')' then count_right += 1
+    ndn = count_left - count_right
+    while ndn > 0
+      src_arr[index] += ')'
+      ndn -= 1
+
   if dn isnt (Math.round dn)
     throw new Error 'bad indentation'
   while dn >= 0
@@ -114,7 +128,7 @@ make_arr = (str) ->
         if item is '' then false else true
 
 source_array = parse make_arr (mask_blank input_string)
-ll source_array
+# ll source_array
 
 sequence = (arr) ->
   effort = ''
