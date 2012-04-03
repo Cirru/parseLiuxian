@@ -114,6 +114,7 @@ make_arr = (str) ->
         if item is '' then false else true
 
 source_array = parse make_arr (mask_blank input_string)
+ll source_array
 
 sequential_excution = (arr) ->
   effort = ''
@@ -131,8 +132,10 @@ expend = (arr) ->
     when 'arr' then exp = make_array      body
     when 'var' then exp = declare_varable body
     when 'let' then exp = assign_varable  body
+    when 'fn'  then exp = define_function body
+    when 'if'  then exp = if_expression   body
     else
-      if head in ['+', '-', '*', '/', '%']
+      if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
       if (image = head.match /^((\w+\/)*\w+)$/)?
         exp = run_function head, body
@@ -184,6 +187,23 @@ make_object = (arr) ->
       exp.push "#{index}: #{value}"
     else throw new Error 'err in making obj'
   "{#{exp.join ', '}}"
+
+define_function = (arr) ->
+  args = arr[0].join ', '
+  body = sequential_excution arr[1..]
+  "function(#{args}){#{body}}"
+
+if_expression = (arr) ->
+  exp = []
+  els = ''
+  for item in arr
+    if typeof item[0] is 'object'
+      cond = expend item[0]
+      body = sequential_excution item[1..]
+      exp.push "if(#{cond}){#{body}}"
+    else
+      els = sequential_excution item[1..]
+  (exp.join 'else ') + "else{#{els}}"
 
 target = sequential_excution source_array
 

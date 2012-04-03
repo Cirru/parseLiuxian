@@ -10,3 +10,13 @@ write code with 2 spaces in front!
   var b (arr 1 2 4 (arr 1 2 4))
   console/log
     obj (a 3) (b '33')
+  var ss true
+  fn (a b)
+    do x
+    do y
+  if \ (> 2 3)
+      do x
+      do y
+    (> 4 5)
+      do z
+    else (x a)

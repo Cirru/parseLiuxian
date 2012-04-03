@@ -7,3 +7,17 @@ console.log({
     a: 3,
     b: '33'
 });
+var ss = true;
+
+function(a, b) {
+    do(x);
+    do(y);
+};
+if (2 > 3) {
+    do(x);
+    do(y);
+} else if (4 > 5) {
+    do(z);
+} else {
+    x(a);
+};
