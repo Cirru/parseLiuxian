@@ -7,3 +7,4 @@ write code with 2 spaces in front!
   var a 3
   console/log
     let a (+ 1 2 2 3)
+  var b (arr 1 2 4 (arr 1 2 4))

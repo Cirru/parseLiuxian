@@ -126,6 +126,7 @@ expend = (arr) ->
   head = arr[0]
   body = arr[1..]
   exp = 'Error if you can see..'
+  ll 'arr', arr
   switch head
     when 'arr' then exp = make_array      body
     when 'var' then exp = declare_varable body
@@ -135,6 +136,7 @@ expend = (arr) ->
         exp =  calculate head, body
       if (image = head.match /^((\w+\/)*\w+)$/)?
         exp = run_function head, body
+  ll exp
   exp
 
 exp_judge = (x) ->
@@ -146,7 +148,7 @@ exp_judge = (x) ->
 
 calculate = (head, body) ->
   exp = (body.map exp_judge).join head
-  "(#{exp})"
+  "#{exp}"
 
 run_function = (head, body) ->
   body = body.map exp_judge
@@ -170,6 +172,11 @@ assign_varable = (arr) ->
       value = expend value
     return "#{varable} = #{value}"
   else throw new Error 'wrong type in assign'
+
+make_array = (arr) ->
+  arr = arr.map exp_judge
+  exp = arr.join ', '
+  "[#{exp}]"
 
 target = sequential_excution source_array
 
