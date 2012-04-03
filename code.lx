@@ -8,3 +8,5 @@ write code with 2 spaces in front!
   console/log
     let a (+ 1 2 2 3)
   var b (arr 1 2 4 (arr 1 2 4))
+  console/log
+    obj (a 3) (b '33')

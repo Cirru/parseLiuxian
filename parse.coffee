@@ -126,8 +126,8 @@ expend = (arr) ->
   head = arr[0]
   body = arr[1..]
   exp = 'Error if you can see..'
-  ll 'arr', arr
   switch head
+    when 'obj' then exp = make_object     body
     when 'arr' then exp = make_array      body
     when 'var' then exp = declare_varable body
     when 'let' then exp = assign_varable  body
@@ -136,7 +136,6 @@ expend = (arr) ->
         exp =  calculate head, body
       if (image = head.match /^((\w+\/)*\w+)$/)?
         exp = run_function head, body
-  ll exp
   exp
 
 exp_judge = (x) ->
@@ -159,8 +158,7 @@ declare_varable = (arr) ->
   varable = arr[0]
   value = arr[1]
   if typeof varable is 'string'
-    if typeof value isnt 'string'
-      value = expend value
+    value = exp_judge value
     return "var #{varable} = #{value}"
   else throw new Error 'wrong type in declare'
 
@@ -168,8 +166,7 @@ assign_varable = (arr) ->
   varable = arr[0]
   value = arr[1]
   if typeof varable is 'string'
-    if typeof value isnt 'string'
-      value = expend value
+    value = exp_judge value
     return "#{varable} = #{value}"
   else throw new Error 'wrong type in assign'
 
@@ -177,6 +174,16 @@ make_array = (arr) ->
   arr = arr.map exp_judge
   exp = arr.join ', '
   "[#{exp}]"
+
+make_object = (arr) ->
+  exp = []
+  for item in arr
+    if typeof item[0] is 'string'
+      index = item[0]
+      value = exp_judge item[1]
+      exp.push "#{index}: #{value}"
+    else throw new Error 'err in making obj'
+  "{#{exp.join ', '}}"
 
 target = sequential_excution source_array
 
