@@ -23,3 +23,12 @@ write code with 2 spaces in front!
     let a (- a 1)
 
   for (arr 1 2 3) a (console/log a)
+
+  console/log 'fabonaci test'
+  var f
+    fn (n a)
+      if \ (< a 2)
+          return 1
+        else
+          return (+ (f (- a 1)) (f (- a 2)))
+  console/log \ f 10
