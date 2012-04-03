@@ -287,8 +287,6 @@ va = (str) ->
       continue
     throw new Error "varable cant be recognized"
   exp
-ll va 'console/fun:4'
-ll va 'console/fun_c4'
 
 run_method = (head, body) ->
   unless body[0]? then throw new Error 'err in method'
