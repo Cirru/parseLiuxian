@@ -238,11 +238,15 @@ for_loop = (arr) ->
     index = varas[1]
   else
     varable = varas
+    index = undefined
   body = sequence arr[2..]
-  exp = "for(_i=0;_i<#{range}.length;_i++){"
+  exp = "for(var _i=0;_i<#{range}.length;_i++){"
   exp += "#{varable} = #{range}[_i];"
-  exp += "#{index} = _i;" if index?
-  exp += "#{body};}"
+  if index?
+    exp += "#{index} = _i;"
+  else
+    exp += 'delete _i;'
+  exp += "#{body}}"
   exp
 
 target = sequence source_array
