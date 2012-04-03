@@ -27,6 +27,13 @@ write code with 2 spaces in front!
 then, detailed varable names needed, the ideas below will be mixed:
 1)  'object/attribute' converts to 'object.attribute'
 2)  pounctions like '!' in name change with '_', 'a!' to 'a_1'
-4)  '(/method object args)' converts to 'object.method(args)'
   
-  /call obj 3 (arr 2)
+  console/log '\nmore testing'
+  console/log 3 (arr 2)
+  var a \ obj
+      a 2
+      make-obj 3
+      func \ fn (a b)
+          return (+ b 1)
+  console/log \ a/func 3
+  console/log a/make-obj

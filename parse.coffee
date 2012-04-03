@@ -153,15 +153,16 @@ expend = (arr) ->
     else
       if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
-      if (image = head.match /^((\w+\/)*\w+)$/)?
+      else if (image = head.match f_available)?
         exp = run_function head, body
-      if (image = head.match /^\/.+/)
-        exp = run_method head, body
   exp
 
 exp_judge = (x) ->
   if typeof x is 'string'
-    return x
+    if x.match f_available
+      return va x
+    else
+      return x
   if typeof x is 'object'
     return expend x
   throw new Error 'wrong type for calculate'
@@ -170,13 +171,14 @@ calculate = (head, body) ->
   exp = (body.map exp_judge).join head
   "#{exp}"
 
+f_available = /^[\w\!\?@#\$\%\^\&\*\-\=\+:\/]+/
 run_function = (head, body) ->
   body = body.map exp_judge
-  head = head.replace /\//g, '.'
+  head = va head
   "#{head}(#{body})"
 
 declare_varable = (arr) ->
-  varable = arr[0]
+  varable = va arr[0]
   value = arr[1]
   if typeof varable is 'string'
     value = exp_judge value
@@ -184,7 +186,7 @@ declare_varable = (arr) ->
   else throw new Error 'wrong type in declare'
 
 assign_varable = (arr) ->
-  varable = arr[0]
+  varable = va arr[0]
   value = arr[1]
   if typeof varable is 'string'
     value = exp_judge value
@@ -200,7 +202,7 @@ make_object = (arr) ->
   exp = []
   for item in arr
     if typeof item[0] is 'string'
-      index = item[0]
+      index = va item[0]
       value = exp_judge item[1]
       exp.push "#{index}: #{value}"
     else throw new Error 'err in making obj'
@@ -211,7 +213,7 @@ define_function = (arr) ->
   args = ''
   if typeof func is 'object'
     args = func[1..].join ', '
-    func = func[0]
+    func = va func[0]
   body = sequence arr[1..]
   "function #{func}(#{args}){#{body}}"
 
@@ -248,7 +250,7 @@ for_loop = (arr) ->
     exp += "#{key} = _i;"
   else
     exp += 'delete _i;'
-  exp + "#{body}}"
+  exp += "#{body}}"
 
 va_list =
   '!': '1'
@@ -286,12 +288,6 @@ va = (str) ->
       continue
     throw new Error "varable cant be recognized"
   exp
-
-run_method = (head, body) ->
-  unless body[0]? then throw new Error 'err in method'
-  obj = body[0]
-  args = (body[1..].map exp_judge).join ', '
-  "#{obj}.#{head[1..]}(#{args})"
 
 target = sequence source_array
 
