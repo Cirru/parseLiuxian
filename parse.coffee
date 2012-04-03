@@ -118,23 +118,24 @@ source_array = parse make_arr (mask_blank input_string)
 sequential_excution = (arr) ->
   effort = ''
   for line in arr
-    effort += (expend line)
+    effort += (expend line) + ';'
   effort
 
 expend = (arr) ->
   throw new Error 'empty exp..' if arr.length is 0
-  s = arr[0]
+  head = arr[0]
+  body = arr[1..]
   exp = 'Error if you can see..'
-  switch s
-    when 'arr' then exp = make_array arr
-    when 'var' then exp = declare_varable arr
-    when 'let' then exp = assign_varable arr
+  switch head
+    when 'arr' then exp = make_array      body
+    when 'var' then exp = declare_varable body
+    when 'let' then exp = assign_varable  body
     else
-      if s in ['+', '-', '*', '/', '%']
-        exp =  calculate arr
-      if (image = s.match /^((\w+\/)*\w+)$/)?
-        exp = run_function arr
-  exp + ';'
+      if head in ['+', '-', '*', '/', '%']
+        exp =  calculate head, body
+      if (image = head.match /^((\w+\/)*\w+)$/)?
+        exp = run_function head, body
+  exp
 
 exp_judge = (x) ->
   if typeof x is 'string'
@@ -143,18 +144,18 @@ exp_judge = (x) ->
     return expend x
   throw new Error 'wrong type for calculate'
 
-calculate = (arr) ->
-  new_arr = arr[1..].map exp_judge
-  '(' + (new_arr.join arr[0]) + ')'
+calculate = (head, body) ->
+  exp = (body.map exp_judge).join head
+  "(#{exp})"
 
-run_function = (arr) ->
-  new_arr = arr[1..].map exp_judge
-  func_name = arr[0].replace /\//g, '.'
-  func_name + '(' + new_arr + ')'
+run_function = (head, body) ->
+  body = body.map exp_judge
+  head = head.replace /\//g, '.'
+  "#{head}(#{body})"
 
 declare_varable = (arr) ->
-  varable = arr[1]
-  value = arr[2]
+  varable = arr[0]
+  value = arr[1]
   if typeof varable is 'string'
     if typeof value isnt 'string'
       value = expend value
@@ -162,8 +163,8 @@ declare_varable = (arr) ->
   else throw new Error 'wrong type in declare'
 
 assign_varable = (arr) ->
-  varable = arr[1]
-  value = arr[2]
+  varable = arr[0]
+  value = arr[1]
   if typeof varable is 'string'
     if typeof value isnt 'string'
       value = expend value
