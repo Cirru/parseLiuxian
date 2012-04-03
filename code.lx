@@ -5,4 +5,4 @@ write code with 2 spaces in front!
   + 1 2
   console/log "hello world"
   var a 3
-  let a 4
+  let a "d"
