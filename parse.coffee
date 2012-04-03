@@ -124,14 +124,17 @@ sequential_excution = (arr) ->
 expend = (arr) ->
   throw new Error 'empty exp..' if arr.length is 0
   s = arr[0]
-  if s is 'var'
-    return (declare_varable arr) + ';'
-  if s is 'let'
-    return (assign_varable arr) + ';'
-  if s in ['+', '-', '*', '/', '%']
-    return (calculate arr) + ';'
-  if (image = s.match /^((\w+\/)*\w+)$/)?
-    return (run_function arr) + ';'
+  exp = 'Error if you can see..'
+  switch s
+    when 'arr' then exp = make_array arr
+    when 'var' then exp = declare_varable arr
+    when 'let' then exp = assign_varable arr
+    else
+      if s in ['+', '-', '*', '/', '%']
+        exp =  calculate arr
+      if (image = s.match /^((\w+\/)*\w+)$/)?
+        exp = run_function arr
+  exp + ';'
 
 exp_judge = (x) ->
   if typeof x is 'string'
