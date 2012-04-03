@@ -9,15 +9,18 @@ console.log({
 });
 var ss = true;
 
-function(a, b) {
-    do(x);
-    do(y);
+function aa(a, b) {
+    console.log(true);
 };
-if (2 > 3) {
-    do(x);
-    do(y);
+if (4 > 3) {
+    console.log("4>3");
 } else if (4 > 5) {
-    do(z);
+    console.log("4>5");
 } else {
-    x(a);
+    console.log('else');
+};
+a = 5;
+while (a > 3) {
+    console.log(3);
+    a = a - 1;
 };

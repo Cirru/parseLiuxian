@@ -116,7 +116,7 @@ make_arr = (str) ->
 source_array = parse make_arr (mask_blank input_string)
 ll source_array
 
-sequential_excution = (arr) ->
+sequence = (arr) ->
   effort = ''
   for line in arr
     effort += (expend line) + ';'
@@ -128,12 +128,13 @@ expend = (arr) ->
   body = arr[1..]
   exp = 'Error if you can see..'
   switch head
-    when 'obj' then exp = make_object     body
-    when 'arr' then exp = make_array      body
-    when 'var' then exp = declare_varable body
-    when 'let' then exp = assign_varable  body
-    when 'fn'  then exp = define_function body
-    when 'if'  then exp = if_expression   body
+    when 'obj'   then exp = make_object     body
+    when 'arr'   then exp = make_array      body
+    when 'var'   then exp = declare_varable body
+    when 'let'   then exp = assign_varable  body
+    when 'fn'    then exp = define_function body
+    when 'if'    then exp = if_expression   body
+    when 'while' then exp = while_loop      body
     else
       if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
@@ -189,9 +190,13 @@ make_object = (arr) ->
   "{#{exp.join ', '}}"
 
 define_function = (arr) ->
-  args = arr[0].join ', '
-  body = sequential_excution arr[1..]
-  "function(#{args}){#{body}}"
+  func = arr[0]
+  args = ''
+  if typeof func is 'object'
+    args = func[1..].join ', '
+    func = func[0]
+  body = sequence arr[1..]
+  "function #{func}(#{args}){#{body}}"
 
 if_expression = (arr) ->
   exp = []
@@ -199,13 +204,18 @@ if_expression = (arr) ->
   for item in arr
     if typeof item[0] is 'object'
       cond = expend item[0]
-      body = sequential_excution item[1..]
+      body = sequence item[1..]
       exp.push "if(#{cond}){#{body}}"
     else
-      els = sequential_excution item[1..]
+      els = sequence item[1..]
   (exp.join 'else ') + "else{#{els}}"
 
-target = sequential_excution source_array
+while_loop = (arr) ->
+  cond = expend arr[0]
+  body = sequence arr[1..]
+  "while(#{cond}){#{body}}"
+
+target = sequence source_array
 
 beautify = (require './beautify').js_beautify
 fs.writeFile 'target.js', (beautify target), 'utf-8'

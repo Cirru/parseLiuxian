@@ -11,12 +11,13 @@ write code with 2 spaces in front!
   console/log
     obj (a 3) (b '33')
   var ss true
-  fn (a b)
-    do x
-    do y
-  if \ (> 2 3)
-      do x
-      do y
+  fn (aa a b)
+    console/log true
+  if \ (> 4 3)
+      console/log "4>3"
     (> 4 5)
-      do z
-    else (x a)
+      console/log "4>5"
+    else (console/log 'else')
+  let a 5
+  while (> a 3) (console/log 3)
+    let a (- a 1)
