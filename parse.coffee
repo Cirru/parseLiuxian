@@ -59,10 +59,10 @@ input_data = fs.readFileSync 'code.lx', 'utf-8'
 
 input_array = []
 for line in input_data.split '\n'
-  image = line.match /^\s{2,}/
+  image = line.match /^\s{2,}\S+/
   if image?
     input_array.push line[2..]
-ll input_array
+# ll input_array
 
 fold_input_array = []
 for line, index in input_array
@@ -92,7 +92,7 @@ for line, index in src_arr
     dn -= 1
 
 input_string = '(' + (src_arr.join '') + ')'
-ll input_string
+# ll input_string
 
 parse = (arr) ->
   do recurse = ->
@@ -118,17 +118,56 @@ source_array = parse make_arr (mask_blank input_string)
 sequential_excution = (arr) ->
   effort = ''
   for line in arr
-    effort += (try_eval line)
+    effort += (expend line)
   effort
 
-try_eval = (arr) ->
+expend = (arr) ->
   throw new Error 'empty exp..' if arr.length is 0
-  if arr[0] is 'print' then return print_func arr[1..]
-  else ll 'nothing yet'
+  s = arr[0]
+  if s is 'var'
+    return (declare_varable arr) + ';'
+  if s is 'let'
+    return (assign_varable arr) + ';'
+  if s in ['+', '-', '*', '/', '%']
+    return (calculate arr) + ';'
+  if (image = s.match /^((\w+\/)*\w+)$/)?
+    return (run_function arr) + ';'
 
-print_func = (arr) ->
-  args = arr.join ', '
-  "console.log(#{args});"
+exp_judge = (x) ->
+  if typeof x is 'string'
+    return x
+  if typeof x is 'object'
+    return expend x
+  throw new Error 'wrong type for calculate'
+
+calculate = (arr) ->
+  new_arr = arr[1..].map exp_judge
+  '(' + (new_arr.join arr[0]) + ')'
+
+run_function = (arr) ->
+  new_arr = arr[1..].map exp_judge
+  func_name = arr[0].replace /\//g, '.'
+  func_name + '(' + new_arr + ')'
+
+declare_varable = (arr) ->
+  varable = arr[1]
+  value = arr[2]
+  if typeof varable is 'string'
+    if typeof value isnt 'string'
+      value = expend value
+    return "var #{varable} = #{value}"
+  else throw new Error 'wrong type in declare'
+
+assign_varable = (arr) ->
+  varable = arr[1]
+  value = arr[2]
+  if typeof varable is 'string'
+    if typeof value isnt 'string'
+      value = expend value
+    return "#{varable} = #{value}"
+  else throw new Error 'wrong type in assign'
 
 target = sequential_excution source_array
-ll target
+
+beautify = (require './beautify').js_beautify
+ll beautify target

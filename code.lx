@@ -1,5 +1,8 @@
 
 comments without indentation...
 write code with 2 spaces in front!
-
-  print "hello world"
+    
+  + 1 2
+  console/log "hello world"
+  var a 3
+  let a 4
