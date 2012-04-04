@@ -22,7 +22,7 @@ var x = {
     a: 2,
     c: ll
 };
-x['c']('output: ', '...do...');
+x['c']('output: ');
 ll('failed to make it in 404**404 times'.replace(3, 4).substr(1, 2));
 'failed' ['substr'](1, 2);
 var url = 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js';
