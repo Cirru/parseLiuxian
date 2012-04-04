@@ -1,7 +1,8 @@
+var url = 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js';
 if (exports) {
     console.log('begin');
     http = require('http');
-    url = 'http://docview.cnodejs.net/learning/coffee/snippets/test_lib/libs.js?js';
+    url = url;
     image = url.match(/^(http(s)?:(\/\/)?)?([^/]+)(\/.+)$/);
     if (image) {
         console.log(image);
@@ -29,19 +30,3 @@ if (exports) {
         }
     }
 };
-
-/* the file at remote writess this:
-var f1, f2;
-
-f1 = function() {
-  return console.log('this is f1');
-};
-
-f2 = function(x) {
-  return console.log("here fs with" + x);
-};
-
-liuxian.f1 = f1;
-
-liuxian.f2 = f2;
-*/

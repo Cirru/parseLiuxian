@@ -1,4 +1,3 @@
 
-  fetch x 'http://docview.cnodejs.net/learning/coffee/snippets/test_lib/libs.js?js'
-    x/f1
-    x/f2 3
+  var url 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js'
+  fetch x url (x/f1) (x/f2 3)
