@@ -1,3 +1,30 @@
+var a = [1, 2, 3, 4, 5];
+var a = 4;
+if (a > 3) {
+    console['log'](true);
+} else if (a > 0) {
+    console['log']('still positive');
+} else {
+    console['log'](false);
+};
+while (a > 0) {
+    console['log'](a);
+    var a = a - 1;
+};
+var x = function f(a) {
+        return (a + 1);
+    };
+var ll = function f(data) {
+        console['log'](data);
+    };
+ll(3);
+var x = {
+    a: 2,
+    c: ll
+};
+x['c']('output: ', '...do...');
+ll('failed to make it in 404**404 times'.replace(3, 4).substr(1, 2));
+'failed' ['substr'](1, 2);
 var url = 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js';
 url = url;
 if ((typeof exports) != 'undefined') {
@@ -13,7 +40,7 @@ if ((typeof exports) != 'undefined') {
                     data += piece;
                 });
                 res.on('end', function() {
-                    liuxian = {};
+                    var liuxian = {};
                     eval(data);
                     var x = liuxian;
                     var a = 2;

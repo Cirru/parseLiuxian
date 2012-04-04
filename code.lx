@@ -1,9 +1,50 @@
 
+the line without N(:N>1) blanks indentatian at head considered to be comment
+
    ###
-goo
-  comma
-    comment
+multi-line comments begin and ends with `###` at head as first non-blank
+  dont need to care bout indentatian
    ###
+
+`\` at head means current line would be appaned to last one
+
+  var a \ arr 1 2 3
+  \ 4 5
+
+basic expression:
+
+  var a 4
+  if \ (> a 3)
+      console/log true
+    (> a 0)
+      console/log 'still positive'
+    else
+      console/log false
+  while (> a 0)
+    console/log a
+    var a (- a 1)
+  var x
+    fn (f a)
+      return (+ a 1)
+  var ll
+    fn (f data)
+      console/log data
+  ll 3
+
+  var x \ obj
+      a 2
+      c ll
+  x/c 'output: '
+  
+regular express is not supported because `/attr` used it
+
+  ll \ chain 'failed to make it in 404**404 times'
+      replace 3 4
+      substr 1 2
+
+  /substr 'failed' 1 2
+
+A demo to get a `js` file on the net
 
   var url 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js'
   fetch x url

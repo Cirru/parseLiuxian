@@ -310,7 +310,7 @@ cascading = (arr) ->
   exp = name
   for item in args
     method = item[0]
-    sub_args = if item[1]? then item[1]  else ''
+    sub_args = (item[1..].map exp_judge).join ', '
     exp += ".#{method}(#{sub_args})"
   exp
 
