@@ -40,3 +40,6 @@ then, detailed varable names needed, the ideas below will be mixed:
 
   chain a (a b) (a)
   /call (arr 1 2) '2'
+  cut mkde-obj 1 2
+  cut (arr 1 2 3) 1 2
+  console/log \ cut 'testing string' 2 -2

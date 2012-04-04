@@ -42,3 +42,6 @@ console['log'](a['func'](3));
 console['log'](a['make_0obj']);
 a.a(b).a();
 [1, 2]['call']('2');
+mkde_0obj.slice(1, 2);
+[1, 2, 3].slice(1, 2);
+console['log']('testing string'.slice(2, -2));

@@ -147,6 +147,7 @@ expend = (arr) ->
     when 'var'   then exp = declare_varable body
     when 'let'   then exp = assign_varable  body
     when 'for'   then exp = for_loop        body
+    when 'cut'   then exp = cut_array_str   body
     when 'fn'    then exp = define_function body
     when 'if'    then exp = if_expression   body
     when 'while' then exp = while_loop      body
@@ -307,6 +308,12 @@ run_method = (head, body) ->
   obj = exp_judge body[0]
   args = body[1..].map exp_judge
   "#{obj}#{head}(#{args})"
+
+cut_array_str = (arr) ->
+  data = exp_judge arr[0]
+  start = arr[1]
+  end = if arr[2]? then ', '+arr[2] else undefined
+  exp = "#{data}.slice(#{start}#{end})"
 
 target = sequence source_array
 
