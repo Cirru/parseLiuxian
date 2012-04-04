@@ -1,3 +1,11 @@
 
+   ###
+goo
+  comma
+    comment
+   ###
+
   var url 'docview.cnodejs.net/projects/parseLiuxian/libs/libs.js?js'
-  fetch x url (x/f1) (x/f2 3)
+  fetch x url
+    var a 2
+    console/log a

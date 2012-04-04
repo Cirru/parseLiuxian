@@ -57,15 +57,24 @@ mask_blank = (str) ->
 fs = require 'fs'
 input_data = fs.readFileSync 'code.lx', 'utf-8'
 
-input_array = []
-for line in input_data.split '\n'
+input_array = input_data.split '\n'
+code_lines = []
+codeline = yes
+for item in input_array
+  image = item.match /^\s*\#\#\#/
+  if image?
+    codeline = if codeline then no else yes
+  else if codeline
+    code_lines.push item
+
+pure_codelines = []
+for line in code_lines
   image = line.match /^\s{2,}\S+/
   if image?
-    input_array.push line[2..]
-# ll input_array
+    pure_codelines.push line[2..]
 
 fold_input_array = []
-for line, index in input_array
+for line, index in pure_codelines
   image = line.match /^\s*\\(.+)/
   if image?
     if fold_input_array[index-1]?
@@ -327,13 +336,11 @@ fetch_package = (arr) ->
   fetch_url = arr[1]
   body = sequence arr[2..]
   exp = """
-    if(exports){
-      console.log('begin');
+    url = #{fetch_url};
+    if((typeof exports)!='undefined'){
       http = require('http');
-      url = #{fetch_url};
       image = url.match(/^(http(s)?:(\\\/\\\/)?)?([^\/]+)(\\\/.+)$/);
-      if (image){
-        console.log(image);
+      if ((typeof image)!='undefined'){
         var options = {};
         options.host = image[4];
         options.path = image[5];
@@ -341,21 +348,20 @@ fetch_package = (arr) ->
           var data = '';
           res.on('data', function(piece){
             data += piece;
-            console.log('data\\n');
-            })
+            });
           res.on('end', function(){
-            liuxian = {};
+            var liuxian = {};
             eval(data);
             var #{head} = liuxian;
             #{body}
-            })
+            });
         }
-        console.log('end');
-        if (require){
-          var http = require('http');
-          http.request(options, handler).end();
-        }
+        var http = require('http');
+        http.request(options, handler).end();
       }
+    }
+    if ((typeof window)!='undefined'){
+      // cross-domain http request hard for me...
     }
   """
 
