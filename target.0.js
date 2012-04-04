@@ -45,3 +45,4 @@ a.a(b).a();
 mkde_0obj.slice(1, 2);
 [1, 2, 3].slice(1, 2);
 console['log']('testing string'.slice(2, -2));
+new Array(1, 2, 3);

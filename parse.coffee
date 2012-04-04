@@ -148,10 +148,12 @@ expend = (arr) ->
     when 'let'   then exp = assign_varable  body
     when 'for'   then exp = for_loop        body
     when 'cut'   then exp = cut_array_str   body
+    when 'new'   then exp = new_object      body
     when 'fn'    then exp = define_function body
     when 'if'    then exp = if_expression   body
     when 'while' then exp = while_loop      body
     when 'chain' then exp = cascading       body
+    when 'fetch' then exp = fetch_package   body
     else
       if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
@@ -314,6 +316,48 @@ cut_array_str = (arr) ->
   start = arr[1]
   end = if arr[2]? then ', '+arr[2] else undefined
   exp = "#{data}.slice(#{start}#{end})"
+
+new_object = (arr) ->
+  head = arr[0]
+  args = arr[1..].map exp_judge
+  "new #{head}(#{args})"
+
+fetch_package = (arr) ->
+  head = arr[0]
+  fetch_url = arr[1]
+  body = sequence arr[2..]
+  exp = """
+    if(exports){
+      console.log('begin');
+      http = require('http');
+      url = #{fetch_url};
+      image = url.match(/^(http(s)?:(\\\/\\\/)?)?([^\/]+)(\\\/.+)$/);
+      if (image){
+        console.log(image);
+        var options = {};
+        options.host = image[4];
+        options.path = image[5];
+        var handler = function (res){
+          var data = '';
+          res.on('data', function(piece){
+            data += piece;
+            console.log('data\\n');
+            })
+          res.on('end', function(){
+            liuxian = {};
+            eval(data);
+            var #{head} = liuxian;
+            #{body}
+            })
+        }
+        console.log('end');
+        if (require){
+          var http = require('http');
+          http.request(options, handler).end();
+        }
+      }
+    }
+  """
 
 target = sequence source_array
 

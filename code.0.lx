@@ -43,3 +43,6 @@ then, detailed varable names needed, the ideas below will be mixed:
   cut mkde-obj 1 2
   cut (arr 1 2 3) 1 2
   console/log \ cut 'testing string' 2 -2
+
+  new Array 1 2 3
+  
