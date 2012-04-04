@@ -37,3 +37,5 @@ then, detailed varable names needed, the ideas below will be mixed:
           return (+ b 1)
   console/log \ a/func 3
   console/log a/make-obj
+
+  chain a (a b) (a)

@@ -40,3 +40,4 @@ var a = {
 };
 console['log'](a['func'](3));
 console['log'](a['make_0obj']);
+a.a(b).a();

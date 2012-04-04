@@ -150,6 +150,7 @@ expend = (arr) ->
     when 'fn'    then exp = define_function body
     when 'if'    then exp = if_expression   body
     when 'while' then exp = while_loop      body
+    when 'chain' then exp = cascading       body
     else
       if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
@@ -287,6 +288,16 @@ va = (str) ->
       exp += "['#{sub_exp}']"
       continue
     throw new Error "varable cant be recognized"
+  exp
+
+cascading = (arr) ->
+  name = arr[0]
+  args = arr[1..]
+  exp = name
+  for item in args
+    method = item[0]
+    sub_args = if item[1]? then item[1]  else ''
+    exp += ".#{method}(#{sub_args})"
   exp
 
 target = sequence source_array
