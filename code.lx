@@ -39,3 +39,4 @@ then, detailed varable names needed, the ideas below will be mixed:
   console/log a/make-obj
 
   chain a (a b) (a)
+  /call (arr 1 2) '2'

@@ -154,6 +154,8 @@ expend = (arr) ->
     else
       if head in ['+', '-', '*', '/', '%', '<', '>']
         exp =  calculate head, body
+      else if (image = head.match /^\/.+/)
+        exp = run_method head, body
       else if (image = head.match f_available)?
         exp = run_function head, body
   exp
@@ -276,7 +278,7 @@ va_map = (str) ->
       new_str += item
   new_str
 va = (str) ->
-  available = /^([\w\!\?@#\$\%\^\&\*\-\=\+:]+)(.*)/
+  available = /^([\w\!\?@#\$\%\^\&\*\-\=\+:]*)(.*)/
   image = str.match available
   exp = va_map image[1]
   left = image[2]
@@ -299,6 +301,12 @@ cascading = (arr) ->
     sub_args = if item[1]? then item[1]  else ''
     exp += ".#{method}(#{sub_args})"
   exp
+
+run_method = (head, body) ->
+  head = va head
+  obj = exp_judge body[0]
+  args = body[1..].map exp_judge
+  "#{obj}#{head}(#{args})"
 
 target = sequence source_array
 
